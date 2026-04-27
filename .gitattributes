@@ -1,0 +1,2 @@
+# Enforce LF line endings for all files, overriding the user's OS or core.autocrlf settings
+* text=auto eol=lf

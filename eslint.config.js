@@ -1,70 +1,53 @@
-import js from '@eslint/js';
-import vue from 'eslint-plugin-vue';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import vueParser from 'vue-eslint-parser';
-import prettier from 'eslint-plugin-prettier';
+import withNuxt from './.nuxt/eslint.config.mjs';
 
-export default [
+import prettierConfig from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
+import globals from 'globals';
+
+export default withNuxt(
   {
+    // 1. Define your ignored folders
     ignores: ['node_modules', '.nuxt', '.output', 'dist', 'public'],
   },
-
-  js.configs.recommended,
-
   {
-    files: ['**/*.ts', '**/*.vue'],
+    // 2. Fix the 'URL is not defined' and browser globals
     languageOptions: {
-      parser: vueParser,
-      parserOptions: {
-        parser: tsParser,
-        ecmaVersion: 2022,
-        sourceType: 'module',
-      },
       globals: {
-        // Vue
-        ref: 'readonly',
-        reactive: 'readonly',
-        computed: 'readonly',
-        watch: 'readonly',
-        watchEffect: 'readonly',
-
-        // Nuxt
-        useState: 'readonly',
-        useFetch: 'readonly',
-        useAsyncData: 'readonly',
-        useRuntimeConfig: 'readonly',
-        defineNuxtConfig: 'readonly',
-
-        // Nuxt modules
-        useColorMode: 'readonly',
-
-        // Node / Env
-        process: 'readonly',
-
-        // Browser globals
-        console: 'readonly',
-        fetch: 'readonly',
-        RequestInit: 'readonly',
-        Response: 'readonly',
+        ...globals.browser,
+        ...globals.node,
       },
     },
     plugins: {
-      vue,
-      '@typescript-eslint': tseslint,
-      prettier,
+      prettier: prettierPlugin,
     },
     rules: {
+      // ✅ Prettier integration
       'prettier/prettier': 'error',
-      'vue/multi-word-component-names': 'off',
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
-      // eslint-disable-next-line no-undef
-      'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-      // eslint-disable-next-line no-undef
-      'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-      'no-unused-vars': 'off',
+
+      // ✅ Your Custom TypeScript / Nuxt rules
+      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'vue/multi-word-component-names': 'off',
+      'no-console': 'warn',
+      'no-debugger': 'warn',
+      eqeqeq: 'error',
+      curly: 'error',
+      'no-implicit-coercion': 'warn',
+
+      // ✅ Module boundaries
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@modules/*/*'],
+              message:
+                'Do not import from another module directly. Use core/shared or same module only.',
+            },
+          ],
+        },
+      ],
     },
   },
-];
+  prettierConfig, // Always last to override other formatting rules
+);
