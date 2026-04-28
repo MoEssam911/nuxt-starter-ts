@@ -66,6 +66,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           npx netlify deploy \
-            --dir=.output/public \
+            --dir=.dist \
             --site=$SITE_ID \
             ${{ env.DEPLOY_CMD }}
