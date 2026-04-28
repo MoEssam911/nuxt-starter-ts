@@ -10,6 +10,10 @@ concurrency:
   group: deploy-${{ github.ref }}
   cancel-in-progress: true
 
+# 🔥 Move this to the top so ALL steps know we are building for Netlify
+env:
+  NITRO_PRESET: netlify
+
 jobs:
   pipeline:
     runs-on: ubuntu-latest
@@ -27,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # ✅ Quality Gate (Type checking/Linting)
+      # ✅ Quality Gate
       - name: Run Checks
         run: npm run check
 
@@ -51,10 +55,8 @@ jobs:
             echo "ENV_FILE=.env.development" >> $GITHUB_ENV
           fi
 
-      # 🏗️ Build (Nitro preset generates the .netlify folder)
+      # 🏗️ Build the Project (This is the ONLY build that will run now)
       - name: Build Project
-        env:
-          NITRO_PRESET: netlify
         run: npx nuxi build --dotenv ${{ env.ENV_FILE }}
 
       # 🚀 Deploy to the correct Netlify Site
@@ -64,6 +66,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           npx netlify deploy \
-            --dir=.netlify \
+            --dir=.output/public \
             --site=$SITE_ID \
             ${{ env.DEPLOY_CMD }}
