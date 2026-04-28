@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useToast } from '~/core/composables/useToast';
-import { useUsers } from '~/modules/users/services/users.service';
+import { useUsers } from '~/modules/users';
 
 definePageMeta({
   // middleware: 'auth', // Disabled for the public example to work without login
