@@ -15,26 +15,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'npm'
 
-      - run: npm ci
+      - name: Install Dependencies
+        run: npm ci
 
-      # ✅ Quality gate
-      - run: npm run check
+      # ✅ Quality Gate (Type checking/Linting)
+      - name: Run Checks
+        run: npm run check
 
-      # ✅ Build
-      - name: Build
-        env:
-          NITRO_PRESET: netlify
-        run: npm run build
-
-      # 🔥 Determine deploy target
-      - name: Set environment
+      # 🔥 Determine deploy target and set Environment File
+      - name: Set Environment Configuration
         id: env
         run: |
           if [ "${{ github.ref }}" == "refs/heads/main" ]; then
@@ -53,8 +51,14 @@ jobs:
             echo "ENV_FILE=.env.development" >> $GITHUB_ENV
           fi
 
-      # 🚀 Deploy only on specific branches
-      - name: Deploy
+      # 🏗️ Build (Nitro preset generates the .netlify folder)
+      - name: Build Project
+        env:
+          NITRO_PRESET: netlify
+        run: npx nuxi build --dotenv ${{ env.ENV_FILE }}
+
+      # 🚀 Deploy to the correct Netlify Site
+      - name: Deploy to Netlify
         if: env.SITE_ID != ''
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -62,4 +66,4 @@ jobs:
           npx netlify deploy \
             --dir=.netlify \
             --site=$SITE_ID \
-            $DEPLOY_CMD
+            ${{ env.DEPLOY_CMD }}
