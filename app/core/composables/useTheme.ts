@@ -1,4 +1,4 @@
-// app/composables/useTheme.ts
+// Theme composable - wraps @nuxtjs/color-mode
 export type Theme = 'light' | 'dark';
 
 export const useTheme = () => {
@@ -14,8 +14,11 @@ export const useTheme = () => {
     setTheme(theme.value === 'dark' ? 'light' : 'dark');
   };
 
+  const isDark = computed(() => theme.value === 'dark');
+
   return {
     theme,
+    isDark,
     setTheme,
     toggleTheme,
   };

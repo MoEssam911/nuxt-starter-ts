@@ -3,41 +3,60 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "dev": "nuxt dev --dotenv .env.development",
+    "stg": "nuxt dev --dotenv .env.staging",
+    "prod": "nuxt dev --dotenv .env.production",
     "build": "nuxt build",
-    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint": "eslint . --ext .ts,.js,.vue",
-    "lint:fix": "eslint . --ext .ts,.js,.vue --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "fix": "npm run lint:fix && npm run format",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "check": "npm run typecheck && npm run lint && npm run format:check",
-    "prepare": "husky install"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,js,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@nuxtjs/color-mode": "^4.0.0",
+    "@pinia/nuxt": "^0.11.3",
     "@tailwindcss/vite": "^4.1.18",
+    "@vee-validate/zod": "^4.15.1",
     "nuxt": "^4.2.2",
     "tailwindcss": "^4.1.18",
     "vue": "^3.5.26",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1.15.2",
+    "@nuxt/test-utils": "^4.0.2",
     "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.51.0",
-    "@typescript-eslint/parser": "^8.51.0",
+    "@vee-validate/nuxt": "^4.15.1",
+    "@vue/test-utils": "^2.4.8",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-import-resolver-typescript": "^4.4.4",
-    "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.4",
-    "eslint-plugin-vue": "^10.6.2",
-    "husky": "^8.0.3",
+    "globals": "^17.5.0",
+    "happy-dom": "^20.9.0",
+    "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "playwright-core": "^1.59.1",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
-    "vue-eslint-parser": "^10.2.0"
+    "vitest": "^4.1.5",
+    "vue-tsc": "^3.2.7"
   }
 }

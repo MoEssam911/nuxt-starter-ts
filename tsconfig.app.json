@@ -9,11 +9,14 @@
 
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "~/*": ["./*"]
-    },
-
-    "types": ["node", "vite/client"],
-    "lib": ["ESNext", "DOM"]
-  }
+      "@/*": ["./app/*"],
+      "~/*": ["./app/*"],
+      "@core/*": ["./app/core/*"],
+      "@modules/*": ["./app/modules/*"],
+      "@ui/*": ["./app/components/ui/*"],
+      "@layouts/*": ["./app/layouts/*"]
+    }
+  },
+  "include": ["app", ".nuxt/nuxt.d.ts"],
+  "exclude": ["node_modules", ".output"]
 }
