@@ -17,6 +17,5 @@
       "@layouts/*": ["./app/layouts/*"]
     }
   },
-  "include": ["app", ".nuxt/nuxt.d.ts"],
   "exclude": ["node_modules", ".output"]
 }

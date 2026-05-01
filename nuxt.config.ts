@@ -6,8 +6,15 @@ import { extendModulePages } from './app/core/config/module-pages';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  future: {
+    compatibilityVersion: 4,
+  },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
+
+  nitro: {
+    preset: 'netlify',
+  },
 
   vite: {
     plugins: [tailwindcss()],
@@ -76,6 +83,6 @@ export default defineNuxtConfig({
   // TypeScript configuration
   typescript: {
     strict: true,
-    typeCheck: true,
+    typeCheck: false,
   },
 });

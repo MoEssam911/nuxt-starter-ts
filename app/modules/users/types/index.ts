@@ -1,6 +1,5 @@
 // Users module types
 import type { ID } from '@core/types';
-
 export interface User {
   id: ID;
   email: string;
