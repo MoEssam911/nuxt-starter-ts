@@ -1,4 +1,3 @@
-// Theme composable - wraps @nuxtjs/color-mode
 export type Theme = 'light' | 'dark';
 
 export const useTheme = () => {

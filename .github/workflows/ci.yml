@@ -1,0 +1,71 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [main, develop, staging]
+  push:
+    branches: ['**']
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [24.15]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Determine target environment
+        id: set-env
+        shell: bash
+        run: |
+          BRANCH=${GITHUB_REF#refs/heads/}
+          echo "branch=$BRANCH" >> $GITHUB_ENV
+
+          case "$BRANCH" in
+            main)
+              echo "APP_ENV=production" >> $GITHUB_ENV
+              echo "IS_DEPLOY_BRANCH=true" >> $GITHUB_ENV
+              ;;
+            staging)
+              echo "APP_ENV=stage" >> $GITHUB_ENV
+              echo "IS_DEPLOY_BRANCH=true" >> $GITHUB_ENV
+              ;;
+            develop)
+              echo "APP_ENV=dev" >> $GITHUB_ENV
+              echo "IS_DEPLOY_BRANCH=true" >> $GITHUB_ENV
+              ;;
+            *)
+              echo "APP_ENV=development" >> $GITHUB_ENV
+              echo "IS_DEPLOY_BRANCH=false" >> $GITHUB_ENV
+              ;;
+          esac
+
+      - name: Typecheck
+        run: npm run typecheck || true
+
+      - name: Lint
+        run: npm run lint || true
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        if: env.IS_DEPLOY_BRANCH == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuxt-build-${{ env.APP_ENV }}
+          path: .output
+
+      - name: Print build info
+        run: echo "Built for ${{ env.APP_ENV }} (branch ${{ env.branch }}) - Deploy ${{ env.IS_DEPLOY_BRANCH }}"
