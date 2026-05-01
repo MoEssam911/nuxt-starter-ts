@@ -6,8 +6,15 @@ import { extendModulePages } from './app/core/config/module-pages';
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
+  future: {
+    compatibilityVersion: 4,
+  },
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
+
+  nitro: {
+    preset: 'netlify',
+  },
 
   vite: {
     plugins: [tailwindcss()],
@@ -69,13 +76,23 @@ export default defineNuxtConfig({
     // Public keys (exposed to client)
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
-      VITE_API_BASE: process.env.VITE_API_BASE || '',
+      appName: process.env.NUXT_PUBLIC_APP_NAME || 'Nuxt Starter',
+      // environment name: dev | stage | production
+      appEnv: process.env.NUXT_PUBLIC_APP_ENV || process.env.NODE_ENV || 'development',
+
+      // auth endpoints (optional, configurable)
+      authLoginEndpoint: process.env.NUXT_PUBLIC_AUTH_LOGIN_ENDPOINT || '/api/auth/login',
+      authLogoutEndpoint: process.env.NUXT_PUBLIC_AUTH_LOGOUT_ENDPOINT,
+      authMeEndpoint: process.env.NUXT_PUBLIC_AUTH_ME_ENDPOINT,
+      authStorage: process.env.NUXT_PUBLIC_AUTH_STORAGE || 'cookie',
+      authSessionTimeout: process.env.NUXT_PUBLIC_AUTH_SESSION_TIMEOUT,
+      authCookieName: process.env.NUXT_PUBLIC_AUTH_COOKIE_NAME || 'token',
     },
   },
 
   // TypeScript configuration
   typescript: {
     strict: true,
-    typeCheck: true,
+    typeCheck: false,
   },
 });

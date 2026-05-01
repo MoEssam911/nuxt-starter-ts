@@ -1,4 +1,6 @@
 import { useAuthStore } from '~/modules/auth/stores/auth.store';
+import { generateRequestId } from '~/core/utils/request-id';
+import { logError } from '~/core/utils/error-logger';
 
 import type { ApiError } from './types';
 
@@ -14,13 +16,36 @@ export const useApiClient = () => {
     baseURL: config.public.apiBase as string,
 
     onRequest({ options }) {
+      // attach auth header when available
       if (token.value) {
         options.headers = new Headers(options.headers || {});
         options.headers.set('Authorization', `Bearer ${token.value}`);
       }
+
+      // attach a request id for tracing
+      try {
+        const rid = generateRequestId();
+        options.headers = new Headers(options.headers || {});
+        options.headers.set('X-Request-ID', rid);
+        // request id is sent via header for downstream tracing
+      } catch (e) {
+        logError(e, { stage: 'onRequest.requestId' });
+      }
     },
 
     onResponseError({ response }) {
+      const requestId =
+        response?.url && response ? (response as any).headers?.get?.('X-Request-ID') : undefined;
+      try {
+        const apiErr: ApiError = {
+          status: response.status ?? 500,
+          message: response.statusText ?? 'Request failed',
+        };
+        logError(apiErr, { requestId, url: response?.url });
+      } catch (e) {
+        logError(e, { stage: 'onResponseError.log' });
+      }
+
       if (response.status === 401) {
         const auth = useAuthStore();
         auth.logout();
@@ -39,11 +64,11 @@ export const useApiClient = () => {
 export function extractErrorMessage(error: unknown): string {
   if (!error) return 'An unknown error occurred';
 
-  // Nuxt/ofetch error with response data
+  // Nuxt error with response data
   if (typeof error === 'object' && error !== null) {
     const err = error as any;
 
-    // ofetch wraps errors in err.data
+    // wraps errors in err.data
     if (err.data?.message) return err.data.message;
     if (err.data?.error) return err.data.error;
 
