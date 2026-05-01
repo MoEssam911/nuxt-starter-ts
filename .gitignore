@@ -4,6 +4,7 @@
 .nuxt
 .nitro
 .cache
+.netlify
 dist
 
 # Node dependencies
@@ -20,5 +21,4 @@ logs
 
 # Local env files
 .env
-.env.*
 !.env.example
