@@ -1,25 +1,26 @@
-/**
- * Minimal runtime env validator for the starter.
- * Keep checks small so the starter remains flexible.
- */
+import { useRuntimeConfig } from '#app/nuxt';
+
+interface RuntimePublicEnv {
+  apiBase?: string;
+  appName?: string;
+  appEnv?: string;
+}
+
 export const validateEnv = () => {
   const runtime = useRuntimeConfig();
-  const pub = (runtime?.public as Record<string, any>) || {};
+  const pub = (runtime.public as RuntimePublicEnv) || {};
 
-  const apiBase = pub.apiBase as string | undefined;
-  const appName = pub.appName as string | undefined;
-
-  if (!apiBase || typeof apiBase !== 'string' || apiBase.trim() === '') {
+  if (!pub.apiBase || pub.apiBase.trim() === '') {
     throw new Error('Missing runtime config: NUXT_PUBLIC_API_BASE (public.apiBase) is required');
   }
 
-  if (!appName || typeof appName !== 'string' || appName.trim() === '') {
+  if (!pub.appName || pub.appName.trim() === '') {
     throw new Error('Missing runtime config: NUXT_PUBLIC_APP_NAME (public.appName) is required');
   }
 
   return {
-    apiBase,
-    appName,
-    appEnv: (pub.appEnv as string) || 'development',
+    apiBase: pub.apiBase,
+    appName: pub.appName,
+    appEnv: pub.appEnv || 'development',
   };
 };

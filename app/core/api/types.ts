@@ -1,82 +1,87 @@
 import type { Ref, WatchSource } from 'vue';
 
-// ── Toast Options ────────────────────────────────
 /**
- * Controls toast behavior for an API call.
- *  - `true`   → show toast with auto-extracted message
- *  - `string` → show toast with that custom message
- *  - `false`  → suppress toast
+ * Standardized API error shape with optional validation errors
  */
-export interface ApiToastOptions {
-  /** Show a toast on success. Default: `false` for GET, `false` for mutations. */
-  success?: boolean | string;
-  /** Show a toast on error. Default: `true` (auto-extract message). */
-  error?: boolean | string;
-}
-
-// ── Error Shape ──────────────────────────────────
-/** Normalized error returned by the API layer. */
 export interface ApiError {
   status: number;
   message: string;
   errors?: Record<string, string[]>;
 }
 
-// ── Response Envelope ────────────────────────────
-/** Use with `transform` if your backend wraps responses. */
+/**
+ * Generic API response wrapper (optional, used by some backends)
+ */
 export interface ApiResponse<T> {
   data: T;
   message?: string;
 }
 
-// ── GET Options ──────────────────────────────────
-export interface ApiGetOptions<T> {
-  /** Toast configuration. Pass `false` to disable all toasts. */
-  toast?: ApiToastOptions | false;
-
-  // Nuxt useAsyncData pass-through options
+/**
+ * Options for query operations (GET, etc.)
+ * Supports SSR hydration, caching, deduplication, and reactivity
+ */
+export interface QueryOptions<T> {
+  /** Unique cache key. Defaults to URL. */
   key?: string;
+  /** Start fetch after hydration (default: false). */
   lazy?: boolean;
+  /** Fetch on server (default: true). */
   server?: boolean;
+  /** Fetch immediately (default: true). */
   immediate?: boolean;
+  /** Re-fetch when these dependencies change. */
   watch?: WatchSource[] | false;
+  /** Default value while loading. */
   default?: () => T | Ref<T>;
-  transform?: (data: any) => T;
+  /** Transform API response before storing. */
+  transform?: (data: unknown) => T;
+  /** Custom cache getter for stale-while-revalidate. */
   getCachedData?: (key: string, nuxtApp: any) => T | undefined;
+  /** Deduplication strategy: 'cancel' (default for GET) or 'defer'. */
   dedupe?: 'cancel' | 'defer';
+  /** Deep watch (when watch is used). */
   deep?: boolean;
-
-  // HTTP extras
+  /** Query parameters. */
   query?: Record<string, any>;
+  /** Custom headers. */
   headers?: Record<string, string>;
 }
 
-// ── Mutation Options ─────────────────────────────
-export interface ApiMutationOptions<T> {
-  /** Toast configuration. Pass `false` to disable all toasts. */
-  toast?: ApiToastOptions | false;
-
-  // HTTP extras
+/**
+ * Options for mutation operations (POST, PUT, PATCH, DELETE)
+ */
+export interface MutationOptions<T> {
+  /** Custom headers. */
   headers?: Record<string, string>;
+  /** Query parameters. */
   query?: Record<string, any>;
-
-  // Callbacks
+  /** Called when mutation succeeds. */
   onSuccess?: (data: T) => void | Promise<void>;
+  /** Called when mutation fails. */
   onError?: (error: ApiError) => void;
 }
 
-// ── Return Types ─────────────────────────────────
-/** Shared return shape for all API methods. */
-export interface ApiReturn<T> {
+/**
+ * Result from a query operation (GET, etc.)
+ * Includes refresh() for manual re-fetching and hydration control
+ */
+export interface QueryResult<T> {
+  data: Ref<T | null>;
+  pending: Ref<boolean>;
+  error: Ref<ApiError | null>;
+  refresh: (opts?: { dedupe?: 'cancel' | 'defer' }) => Promise<void>;
+  clear: () => void;
+  status: Ref<'idle' | 'pending' | 'success' | 'error'>;
+}
+
+/**
+ * Result from a mutation operation (POST, PUT, PATCH, DELETE)
+ * Includes execute() to trigger the mutation
+ */
+export interface MutationResult<T> {
   data: Ref<T | null>;
   loading: Ref<boolean>;
   error: Ref<ApiError | null>;
   execute: (body?: unknown) => Promise<T | null>;
-}
-
-/** Extended return for `api.get()` — includes refresh, clear, status from useAsyncData. */
-export interface ApiGetReturn<T> extends ApiReturn<T> {
-  refresh: (opts?: { dedupe?: 'cancel' | 'defer' }) => Promise<void>;
-  clear: () => void;
-  status: Ref<'idle' | 'pending' | 'success' | 'error'>;
 }
