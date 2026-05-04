@@ -1,24 +1,30 @@
-export type Theme = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark' | 'system';
 
 export const useTheme = () => {
   const colorMode = useColorMode();
 
-  const theme = computed<Theme>(() => colorMode.value as Theme);
+  const isDark = computed(() => colorMode.value === 'dark');
 
-  const setTheme = (next: Theme) => {
-    colorMode.preference = next;
+  const theme = computed(() => colorMode.value as ThemeMode);
+
+  const setTheme = (next: ThemeMode) => {
+    if (next === 'system') {
+      colorMode.preference = 'system';
+    } else {
+      colorMode.preference = next;
+    }
   };
 
   const toggleTheme = () => {
-    setTheme(theme.value === 'dark' ? 'light' : 'dark');
+    const nextMode: ThemeMode = isDark.value ? 'light' : 'dark';
+    setTheme(nextMode);
   };
-
-  const isDark = computed(() => theme.value === 'dark');
 
   return {
     theme,
     isDark,
     setTheme,
     toggleTheme,
+    colorMode,
   };
 };

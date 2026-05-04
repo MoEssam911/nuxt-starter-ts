@@ -1,21 +1,27 @@
 <script setup lang="ts">
+import { useTheme } from '../core/composables/useTheme';
+
 const { toggleTheme, isDark } = useTheme();
 </script>
 
 <template>
-  <div>
-    <header class="p-4 border-b border-border">
-      <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-primary">Nuxt Enterprise Starter</h1>
-        <button
-          class="px-4 py-2 rounded-md bg-surface hover:bg-primary hover:text-white transition-colors"
-          @click="toggleTheme()"
-        >
-          {{ isDark ? '☀️ Light' : '🌙 Dark' }}
+  <div class="app-shell">
+    <header class="app-shell__header">
+      <div class="app-shell__brand">
+        <span class="app-shell__badge">Starter</span>
+        <NuxtLink to="/">Nuxt Starter</NuxtLink>
+      </div>
+
+      <div class="starter-demo-actions">
+        <NuxtLink class="starter-demo-button" to="/example">Example Module</NuxtLink>
+        <button class="starter-demo-button" type="button" @click="toggleTheme()">
+          {{ isDark ? 'Light mode' : 'Dark mode' }}
         </button>
       </div>
     </header>
+
     <slot />
+
     <UiToastProvider />
   </div>
 </template>

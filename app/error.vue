@@ -1,30 +1,13 @@
-<script setup lang="ts">
-const error = useError();
-
-const isDev = import.meta.dev;
-</script>
-
 <template>
-  <div class="min-h-screen flex flex-col items-center justify-center gap-4 text-center">
-    <h1 class="text-4xl font-bold">
-      {{ error?.statusCode || 500 }}
-    </h1>
+  <main class="error-shell">
+    <section class="error-card">
+      <p class="error-card__code">Error</p>
+      <h1>Something went wrong</h1>
+      <p class="error-card__message">
+        The page could not be rendered. Please return to the homepage and try again.
+      </p>
 
-    <p class="text-lg text-gray-500">
-      {{ error?.statusMessage || 'Something went wrong' }}
-    </p>
-
-    <pre
-      v-if="isDev && error?.data"
-      class="mt-6 max-w-xl overflow-auto rounded bg-black p-4 text-left text-sm text-red-400"
-      >{{ error.data }}
-    </pre>
-
-    <button
-      class="mt-6 rounded bg-primary px-4 py-2 text-white"
-      @click="clearError({ redirect: '/' })"
-    >
-      Go home
-    </button>
-  </div>
+      <a class="error-card__action" href="/">Go home</a>
+    </section>
+  </main>
 </template>

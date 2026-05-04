@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
  * Auto-discovers and registers pages from all feature modules.
  *
  * Scans app/modules/[*]/pages/ for .vue files and adds them
- * as flat routes (no module prefix).
+ * as module-prefixed routes.
  */
 export const extendModulePages = (pages: any[]) => {
   const modulesDir = resolve(process.cwd(), 'app', 'modules');
@@ -28,7 +28,11 @@ export const extendModulePages = (pages: any[]) => {
       if (!file.endsWith('.vue')) continue;
 
       const name = file.replace('.vue', '');
-      const routePath = name === 'index' ? '/' + moduleName : '/' + name;
+      let routePath = '/' + moduleName;
+
+      if (name !== 'index') {
+        routePath = `/${moduleName}/${name.replace(/\[(.+?)\]/g, ':$1')}`;
+      }
 
       pages.push({
         name: moduleName + '-' + name,

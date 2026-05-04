@@ -10,3 +10,7 @@ declare module '*.vue' {
 interface ImportMetaEnv {
   readonly VITE_API_BASE?: string;
 }
+
+declare const useHead: (input: Record<string, unknown>) => void;
+declare const definePageMeta: (meta: Record<string, unknown>) => void;
+declare const navigateTo: (to: string) => Promise<unknown> | unknown;

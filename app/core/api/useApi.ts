@@ -1,89 +1,74 @@
-import { useApiClient, extractErrorMessage, normalizeError } from './client';
-import type { ApiGetOptions, ApiGetReturn, ApiMutationOptions, ApiReturn, ApiError } from './types';
-import { useToast } from '../composables/useToast';
+import { useApiClient } from './client';
+import type { QueryOptions, MutationOptions, QueryResult, MutationResult, ApiError } from './types';
 
 /**
- * Unified API composable with axios-style method helpers.
+ * Unified API composable for both SSR-safe queries and imperative mutations.
  *
  * @example
- * ```ts
- * const api = useApi()
+ * ```typescript
+ * // Simple GET (auto SSR hydrated, deduplicated)
+ * const { data, pending, error } = useApi().get('/users')
  *
- * // GET — SSR-safe, reactive, cached
- * const { data, loading, error, refresh } = api.get<User[]>('/users')
- *
- * // POST — imperative mutation
- * const { execute, loading } = api.post<User>('/users', {
- *   toast: { success: 'User created!' },
+ * // Advanced GET with options
+ * const { data, pending, error, refresh } = useApi().get('/users', {
+ *   watch: [route],
+ *   transform: (users) => users.filter(u => u.active),
+ *   lazy: true
  * })
- * await execute({ name: 'John' })
  *
- * // PUT / PATCH / DELETE — same pattern
- * const { execute: update } = api.patch<User>(`/users/${id}`)
- * const { execute: remove } = api.delete(`/users/${id}`)
+ * // Mutation with callback
+ * const { data, loading, error, execute } = useApi().post('/users', {
+ *   onSuccess: () => router.push('/users'),
+ *   onError: (err) => toast.error(err.message)
+ * })
+ * await mutation.execute({ name: 'John' })
  * ```
  */
 export const useApi = () => {
-  const client = useApiClient();
-  const toast = useToast();
+  const { request } = useApiClient();
 
-  // ── GET (SSR-safe via useAsyncData) ────────────
-  const get = <T>(url: string | (() => string), options?: ApiGetOptions<T>): ApiGetReturn<T> => {
+  // ── GET / Queries (SSR-safe via useAsyncData) ──────
+  const get = <T>(url: string | (() => string), options?: QueryOptions<T>): QueryResult<T> => {
     const resolveUrl = () => (typeof url === 'function' ? url() : url);
     const key = options?.key ?? resolveUrl();
 
-    const asyncDataOptions: Record<string, unknown> = {};
-    if (options?.lazy !== undefined) asyncDataOptions.lazy = options.lazy;
-    if (options?.server !== undefined) asyncDataOptions.server = options.server;
-    if (options?.immediate !== undefined) asyncDataOptions.immediate = options.immediate;
-    if (options?.watch !== undefined) asyncDataOptions.watch = options.watch;
-    if (options?.default !== undefined) asyncDataOptions.default = options.default;
-    if (options?.transform !== undefined) asyncDataOptions.transform = options.transform;
-    if (options?.getCachedData !== undefined)
-      asyncDataOptions.getCachedData = options.getCachedData;
-    if (options?.dedupe !== undefined) asyncDataOptions.dedupe = options.dedupe;
-    if (options?.deep !== undefined) asyncDataOptions.deep = options.deep;
+    // Smart defaults for queries
+    const asyncDataDefaults: any = {
+      server: true,
+      dedupe: 'cancel',
+    };
 
+    // Merge user options with defaults
+    const mergedOptions = {
+      ...asyncDataDefaults,
+      ...options,
+    };
+
+    // Call useAsyncData with merged options (pass directly, Nuxt handles them)
     const result = useAsyncData<T>(
       key,
       () =>
-        client<T>(resolveUrl(), {
+        request<T>(resolveUrl(), {
           method: 'GET',
           query: options?.query,
           headers: options?.headers,
         }),
-      asyncDataOptions,
+      mergedOptions,
     );
-
-    // Error toast watcher
-    if (options?.toast !== false) {
-      watch(result.error, (err) => {
-        if (err) {
-          const toastError = options?.toast
-            ? (options.toast as { error?: boolean | string }).error
-            : undefined;
-          if (toastError !== false) {
-            const message = typeof toastError === 'string' ? toastError : extractErrorMessage(err);
-            toast.error(message);
-          }
-        }
-      });
-    }
 
     return {
       data: result.data as Ref<T | null>,
-      loading: result.pending,
+      pending: result.pending,
       error: result.error as Ref<ApiError | null>,
-      execute: result.execute as (body?: unknown) => Promise<T | null>,
       refresh: result.refresh,
       clear: result.clear,
       status: result.status,
     };
   };
 
-  // ── Mutation factory (POST/PUT/PATCH/DELETE) ───
+  // ── Mutation factory (POST/PUT/PATCH/DELETE) ───────
   const createMutation = (method: 'POST' | 'PUT' | 'PATCH' | 'DELETE') => {
-    return <T = void>(url: string, options?: ApiMutationOptions<T>): ApiReturn<T> => {
+    return <T = void>(url: string, options?: MutationOptions<T>): MutationResult<T> => {
       const data = ref<T | null>(null) as Ref<T | null>;
       const loading = ref(false);
       const error = ref<ApiError | null>(null) as Ref<ApiError | null>;
@@ -93,41 +78,24 @@ export const useApi = () => {
         error.value = null;
 
         try {
-          const result = await client<T>(url, {
+          const result = await request<T>(url, {
             method,
-            body: body as Record<string, any>,
+            body,
             headers: options?.headers,
             query: options?.query,
           });
 
           data.value = result;
-
-          // Success toast
-          if (options?.toast && options.toast.success) {
-            const msg =
-              typeof options.toast.success === 'string'
-                ? options.toast.success
-                : 'Operation successful';
-            toast.success(msg);
+          if (result !== null) {
+            await options?.onSuccess?.(result);
           }
 
-          await options?.onSuccess?.(result);
           return result;
-        } catch (e: unknown) {
-          const apiError = normalizeError(e);
+        } catch (caughtError) {
+          const apiError = caughtError as ApiError;
           error.value = apiError;
-
-          // Error toast (on by default for mutations)
-          if (options?.toast !== false) {
-            const toastError = options?.toast?.error;
-            if (toastError !== false) {
-              const msg = typeof toastError === 'string' ? toastError : apiError.message;
-              toast.error(msg);
-            }
-          }
-
           options?.onError?.(apiError);
-          throw apiError;
+          return null;
         } finally {
           loading.value = false;
         }
@@ -138,15 +106,39 @@ export const useApi = () => {
   };
 
   return {
-    /** SSR-safe data fetching. Wraps `useAsyncData` + configured `$fetch`. */
+    /**
+     * SSR-safe data fetching (GET).
+     * Automatically hydrated on client, deduplicates identical requests.
+     * Use with watch option for reactive route/search parameters.
+     */
     get,
-    /** Imperative POST mutation. Returns `{ execute, loading, error, data }`. */
+
+    /**
+     * Imperative POST mutation.
+     * Returns { data, loading, error, execute }.
+     * Call execute(payload) to trigger.
+     */
     post: createMutation('POST'),
-    /** Imperative PUT mutation. Returns `{ execute, loading, error, data }`. */
+
+    /**
+     * Imperative PUT mutation.
+     * Returns { data, loading, error, execute }.
+     * Call execute(payload) to trigger.
+     */
     put: createMutation('PUT'),
-    /** Imperative PATCH mutation. Returns `{ execute, loading, error, data }`. */
+
+    /**
+     * Imperative PATCH mutation.
+     * Returns { data, loading, error, execute }.
+     * Call execute(payload) to trigger.
+     */
     patch: createMutation('PATCH'),
-    /** Imperative DELETE mutation. Returns `{ execute, loading, error, data }`. */
+
+    /**
+     * Imperative DELETE mutation.
+     * Returns { data, loading, error, execute }.
+     * Call execute() or execute(body) to trigger.
+     */
     delete: createMutation('DELETE'),
   };
 };
