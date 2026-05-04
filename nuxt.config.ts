@@ -1,5 +1,3 @@
-import { fileURLToPath } from 'node:url';
-
 import tailwindcss from '@tailwindcss/vite';
 
 import { extendModulePages } from './app/core/config/module-pages';
@@ -12,27 +10,37 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['./app/assets/css/main.css'],
 
-  nitro: {
-    preset: 'netlify',
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+    {
+      path: '~/modules',
+      pathPrefix: false,
+      ignore: ['**/pages/**', '**/stores/**', '**/services/**', '**/types/**'],
+    },
+  ],
+
+  imports: {
+    dirs: ['core/composables', 'core/utils'],
   },
 
   vite: {
     plugins: [tailwindcss()],
   },
 
-  pages: true,
-
   hooks: {
     'pages:extend': extendModulePages,
   },
 
-  modules: [
-    '@nuxtjs/color-mode',
-    '@pinia/nuxt',
-    '@nuxt/eslint',
-    '@vee-validate/nuxt',
-    '@nuxt/test-utils/module',
-  ],
+  modules: ['@nuxt/eslint', '@nuxtjs/color-mode', '@pinia/nuxt'],
+
+  colorMode: {
+    classSuffix: '',
+    classPrefix: '',
+    storageKey: 'starter-theme-mode',
+  },
 
   eslint: {
     config: {
@@ -40,57 +48,15 @@ export default defineNuxtConfig({
     },
   },
 
-  colorMode: {
-    preference: 'light',
-    fallback: 'light',
-    classSuffix: '',
-    storageKey: 'color-mode',
-  },
-
-  // Path aliases for modular architecture
-  alias: {
-    '@core': fileURLToPath(new URL('./app/core', import.meta.url)),
-    '@modules': fileURLToPath(new URL('./app/modules', import.meta.url)),
-    '@ui': fileURLToPath(new URL('./app/components/ui', import.meta.url)),
-    '@layouts': fileURLToPath(new URL('./app/layouts', import.meta.url)),
-  },
-
-  // Auto-imports configuration
-  imports: {
-    dirs: ['core/composables', 'core/utils', 'core/api', 'modules/**/composables'],
-  },
-
-  // Components auto-import
-  components: {
-    dirs: [
-      { path: '~/components/ui', prefix: 'Ui' },
-      { path: '~/components', pathPrefix: false },
-    ],
-  },
-
   // Runtime config
   runtimeConfig: {
-    // Private keys (server-side only)
-    apiSecret: '',
-
-    // Public keys (exposed to client)
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
       appName: process.env.NUXT_PUBLIC_APP_NAME || 'Nuxt Starter',
-      // environment name: dev | stage | production
       appEnv: process.env.NUXT_PUBLIC_APP_ENV || process.env.NODE_ENV || 'development',
-
-      // auth endpoints (optional, configurable)
-      authLoginEndpoint: process.env.NUXT_PUBLIC_AUTH_LOGIN_ENDPOINT || '/api/auth/login',
-      authLogoutEndpoint: process.env.NUXT_PUBLIC_AUTH_LOGOUT_ENDPOINT,
-      authMeEndpoint: process.env.NUXT_PUBLIC_AUTH_ME_ENDPOINT,
-      authStorage: process.env.NUXT_PUBLIC_AUTH_STORAGE || 'cookie',
-      authSessionTimeout: process.env.NUXT_PUBLIC_AUTH_SESSION_TIMEOUT,
-      authCookieName: process.env.NUXT_PUBLIC_AUTH_COOKIE_NAME || 'token',
     },
   },
 
-  // TypeScript configuration
   typescript: {
     strict: true,
     typeCheck: false,

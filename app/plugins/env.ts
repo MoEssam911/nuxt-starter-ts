@@ -1,6 +1,6 @@
 import { validateEnv } from '~/core/config/env';
 
 export default defineNuxtPlugin(() => {
-  // Validate runtime public config on startup; throws if required values missing.
+  // Normalize runtime public config early so the app can render with safe defaults.
   validateEnv();
 });
