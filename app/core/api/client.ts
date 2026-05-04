@@ -20,9 +20,10 @@ type FetchOptions = {
  */
 export const useApiClient = () => {
   const config = useRuntimeConfig();
+  const baseURL = config.public.apiBase || undefined;
 
   const api = $fetch.create({
-    baseURL: config.public.apiBase as string,
+    baseURL,
 
     onRequest({ options }) {
       const rid = generateRequestId();
