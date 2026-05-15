@@ -28,12 +28,12 @@
         <div>
           <dt>Example module</dt>
           <dd>
-            <NuxtLink
+            <NuxtLinkLocale
               class="text-blue-600 underline-offset-4 hover:underline dark:text-blue-400"
               to="/example"
             >
               API template route
-            </NuxtLink>
+            </NuxtLinkLocale>
           </dd>
         </div>
       </dl>

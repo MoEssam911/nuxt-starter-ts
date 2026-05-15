@@ -7,7 +7,7 @@
         The page could not be rendered. Please return to the homepage and try again.
       </p>
 
-      <a class="error-card__action" href="/">Go home</a>
+      <NuxtLinkLocale class="error-card__action" to="/">Go home</NuxtLinkLocale>
     </section>
   </main>
 </template>

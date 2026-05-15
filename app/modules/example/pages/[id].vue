@@ -9,6 +9,7 @@ import { useExampleService } from '../services/example.service';
 
 const route = useRoute();
 const router = useRouter();
+const localePath = useLocalePath();
 const toast = useToast();
 const exampleService = useExampleService();
 
@@ -57,7 +58,7 @@ const deleteCurrentItem = async () => {
   }
 
   toast.success('Item deleted', 'The item was deleted successfully.');
-  await router.push('/example');
+  await router.push(localePath('/example'));
 };
 </script>
 
@@ -69,18 +70,18 @@ const deleteCurrentItem = async () => {
       description="Details page demonstrates a clean read flow with service-only API access."
     >
       <template #actions>
-        <NuxtLink
+        <NuxtLinkLocale
           to="/example"
           class="rounded-full border border-border bg-bg px-5 py-2.5 text-sm font-semibold text-text transition hover:border-primary-300 hover:text-primary"
         >
           Back to list
-        </NuxtLink>
-        <NuxtLink
+        </NuxtLinkLocale>
+        <NuxtLinkLocale
           :to="`/example/create-edit?id=${itemId}`"
           class="rounded-full border border-info/40 bg-info/10 px-5 py-2.5 text-sm font-semibold text-info transition hover:bg-info/20"
         >
           Edit
-        </NuxtLink>
+        </NuxtLinkLocale>
       </template>
     </ExamplePageHeader>
 

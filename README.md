@@ -30,6 +30,7 @@ Implemented a scalable, domain-driven, service-first directory structure inside 
 - **Path Aliases**: configured in `nuxt.config.ts` (`@core`, `@modules`, `@ui`, `@layouts`).
 - **Auto-imports**: Explicitly configured for `core/composables`, `core/utils`, and module-scoped patterns.
 - **Auto-discovery**: Pages and components automatically discovered and registered without explicit imports.
+- **Internationalization**: `@nuxtjs/i18n` is wired with locale-aware routes and modular locale discovery.
 
 ### 3. Theming & Styling System
 
@@ -59,6 +60,22 @@ A complete, copy-paste-able feature module demonstrating best practices:
 - **Service**: `useExampleService()` wrapping JSONPlaceholder CRUD API.
 - **Types**: Feature-scoped interfaces (`ExampleItem`, `ExampleFormValues`).
 - **UI Patterns**: Responsive layouts, loading/error/empty states, form validation, toast notifications.
+
+### 6. Modular i18n Layout
+
+Translations follow the same modular structure as pages and components:
+
+```text
+locales/
+├── en.json
+└── ar.json
+
+app/modules/[feature-name]/locales/
+├── en.json
+└── ar.json
+```
+
+The i18n loader scans these folders automatically, merges shared messages first, then applies module-specific overrides. Add a new module locale file and it is picked up without editing a central registry.
 
 ---
 

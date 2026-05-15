@@ -14,6 +14,9 @@ node_modules
 logs
 *.log
 
+# Generated merged locale files (sourced from locales/ and app/modules/*/locales/)
+i18n/locales/
+
 # Misc
 .DS_Store
 .fleet

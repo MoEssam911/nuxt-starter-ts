@@ -1,0 +1,7 @@
+{
+  "example": {
+    "create": "Create example item",
+    "empty": "No example items yet",
+    "title": "Example module"
+  }
+}

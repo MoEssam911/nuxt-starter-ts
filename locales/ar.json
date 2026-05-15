@@ -1,0 +1,20 @@
+{
+  "common": {
+    "appName": "مبدئ Nuxt",
+    "cancel": "إلغاء",
+    "loading": "جار التحميل",
+    "save": "حفظ"
+  },
+  "navigation": {
+    "exampleModule": "الوحدة التجريبية",
+    "home": "الرئيسية"
+  },
+  "language": {
+    "label": "اللغة"
+  },
+  "theme": {
+    "dark": "الوضع الداكن",
+    "light": "الوضع الفاتح",
+    "toggle": "تبديل المظهر"
+  }
+}

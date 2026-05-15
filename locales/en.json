@@ -1,0 +1,20 @@
+{
+  "common": {
+    "appName": "Nuxt Starter",
+    "cancel": "Cancel",
+    "loading": "Loading",
+    "save": "Save"
+  },
+  "navigation": {
+    "exampleModule": "Example Module",
+    "home": "Home"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "theme": {
+    "dark": "Dark mode",
+    "light": "Light mode",
+    "toggle": "Toggle theme"
+  }
+}

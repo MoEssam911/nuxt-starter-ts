@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { useTheme } from '../core/composables/useTheme';
-
-const { toggleTheme, isDark } = useTheme();
+const { t } = useI18n();
 </script>
 
 <template>
@@ -9,14 +7,15 @@ const { toggleTheme, isDark } = useTheme();
     <header class="app-shell__header">
       <div class="app-shell__brand">
         <span class="app-shell__badge">Starter</span>
-        <NuxtLink to="/">Nuxt Starter</NuxtLink>
+        <NuxtLinkLocale to="/">{{ t('common.appName') }}</NuxtLinkLocale>
       </div>
 
       <div class="starter-demo-actions">
-        <NuxtLink class="starter-demo-button" to="/example">Example Module</NuxtLink>
-        <button class="starter-demo-button" type="button" @click="toggleTheme()">
-          {{ isDark ? 'Light mode' : 'Dark mode' }}
-        </button>
+        <UiLanguageSwitcher />
+        <NuxtLinkLocale class="starter-demo-button" to="/example">
+          {{ t('navigation.exampleModule') }}
+        </NuxtLinkLocale>
+        <UiThemeToggle />
       </div>
     </header>
 
