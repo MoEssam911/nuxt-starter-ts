@@ -1,6 +1,6 @@
 import type { ApiError } from '~/core/api/types';
 
-export const logError = (err: unknown, ctx: Record<string, any> = {}) => {
+export const logError = (err: unknown, ctx: Record<string, unknown> = {}) => {
   if (import.meta.dev) {
     // Developer-friendly console output
     // eslint-disable-next-line no-console
@@ -10,7 +10,7 @@ export const logError = (err: unknown, ctx: Record<string, any> = {}) => {
   // replacing this function or listening to global errors.
 };
 
-export const logApiError = (apiErr: ApiError, ctx: Record<string, any> = {}) => {
+export const logApiError = (apiErr: ApiError, ctx: Record<string, unknown> = {}) => {
   const context = { ...ctx, status: apiErr.status, errors: apiErr.errors };
   logError(apiErr, context);
 };

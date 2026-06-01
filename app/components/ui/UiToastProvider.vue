@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, watch } from 'vue';
 
-import { useToast } from '../../core/composables/useToast';
-
 const toast = useToast();
 const items = computed(() => toast.toasts.value);
 const dismissTimers = new Map<string, ReturnType<typeof setTimeout>>();

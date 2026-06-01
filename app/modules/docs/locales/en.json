@@ -1,0 +1,132 @@
+{
+  "docs": {
+    "metaTitle": "Documentation",
+    "layout": {
+      "badge": "Docs",
+      "title": "Documentation",
+      "nav": {
+        "overview": "Overview",
+        "gettingStarted": "Getting started",
+        "architecture": "Architecture",
+        "usage": "Using the starter"
+      },
+      "starterLabel": "Starter intent",
+      "starterDescription": "A production-ready baseline for teams that want a clean Nuxt foundation, not a demo shell."
+    },
+    "hero": {
+      "kicker": "Starter documentation",
+      "title": "A practical guide to the Nuxt starter",
+      "description": "Learn how the starter is structured, how the pieces fit together, and how to build features without fighting the foundation.",
+      "primaryCta": "Getting started",
+      "secondaryCta": "View architecture"
+    },
+    "overview": {
+      "title": "What this starter is for",
+      "description": "A clean base for production Nuxt apps with typed data flow, modular features, and predictable route shells."
+    },
+    "cards": {
+      "service": {
+        "title": "Service-first API access",
+        "description": "Call useApi() from feature services, keep transport details out of components, and make requests easy to test."
+      },
+      "forms": {
+        "title": "Typed forms",
+        "description": "Use vee-validate and zod together so validation, submit state, and form values stay explicit."
+      },
+      "layouts": {
+        "title": "Purposeful layouts",
+        "description": "Use default for the app shell, auth for sign-in flows, docs for guidance, and blank for embeds or print views."
+      },
+      "i18n": {
+        "title": "Locale-aware content",
+        "description": "Shared and module strings are merged so English and Arabic stay aligned across the starter."
+      }
+    },
+    "sections": {
+      "gettingStarted": {
+        "title": "Getting started",
+        "description": "Set up the starter conventions, confirm the theme, and build your first page with the right defaults.",
+        "pageTitle": "Build from the starter with clear, production-safe defaults.",
+        "pageDescription": "Start with the existing shell, keep service calls inside module services, and treat the docs as the source of truth for the starter's conventions.",
+        "cards": {
+          "layout": {
+            "title": "Read the layout contract",
+            "description": "Confirm which pages use the default shell, which use docs, and which should stay blank."
+          },
+          "meta": {
+            "title": "Keep page metadata explicit",
+            "description": "Every page should define a title so route intent stays visible in code and navigation."
+          }
+        },
+        "steps": {
+          "routes": {
+            "title": "1. Confirm routes",
+            "description": "Decide whether a page belongs in the public shell, docs shell, auth shell, or blank shell before you build it."
+          },
+          "services": {
+            "title": "2. Use feature services",
+            "description": "Wrap API requests with module services so views only handle presentation and interaction."
+          },
+          "locale": {
+            "title": "3. Keep copy localized",
+            "description": "Put UI strings in locale files so English and Arabic stay in sync as the project grows."
+          }
+        }
+      },
+      "architecture": {
+        "title": "Architecture",
+        "description": "Understand where shared logic lives, where feature logic belongs, and how the routes are composed.",
+        "pageTitle": "The codebase is split by ownership, not by convenience.",
+        "pageDescription": "Shared utilities stay in core, feature logic stays inside modules, pages compose the routes, and layouts define the shell behavior.",
+        "keepStable": {
+          "title": "What to keep stable",
+          "description": "The starter is strongest when the public shell stays simple, API access stays service-first, and the docs explain the conventions instead of duplicating them."
+        },
+        "pillars": {
+          "core": {
+            "title": "app/core",
+            "description": "Shared helpers, API client, config, utilities, and app-wide composables."
+          },
+          "modules": {
+            "title": "app/modules",
+            "description": "Feature ownership for pages, services, types, and component-level UI."
+          },
+          "pages": {
+            "title": "app/pages",
+            "description": "Public routes for landing, docs, and product-facing entry points."
+          },
+          "layouts": {
+            "title": "app/layouts",
+            "description": "Shells that define the public, docs, auth, and blank experiences."
+          }
+        }
+      },
+      "usage": {
+        "title": "How to use the starter",
+        "description": "Practical patterns for service calls, route metadata, auth, theming, and locale-safe UI.",
+        "pageTitle": "The practical rules for shipping features in this starter.",
+        "pageDescription": "These are the conventions that keep the codebase coherent as teams add more routes, forms, and API-driven screens.",
+        "button": "View architecture",
+        "cta": "Open the architecture guide for the full structure.",
+        "items": {
+          "api": {
+            "title": "API access",
+            "description": "Wrap all data access in feature services that use useApi()."
+          },
+          "meta": {
+            "title": "Page metadata",
+            "description": "Set definePageMeta on every page so titles and middleware stay explicit."
+          },
+          "auth": {
+            "title": "Route protection",
+            "description": "Protect routes at the page level instead of hiding state behind global behavior."
+          },
+          "locale": {
+            "title": "Locale text",
+            "description": "Keep user-facing text in locale files so the same route works in every supported language."
+          }
+        }
+      }
+    }
+  }
+}
