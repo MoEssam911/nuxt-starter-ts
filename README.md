@@ -189,6 +189,40 @@ if (mutation.error.value) {
 
 ---
 
+## Project Structure Decisions
+
+### No custom module-pages hook
+
+The starter previously registered pages via a `pages:extend` hook in `nuxt.config.ts`
+(`app/core/config/module-pages.ts`). That hook was removed because:
+
+- **Dev-server restarts**: Every new `.vue` file under `app/modules/*/pages/` triggered a full
+  server restart via the Nuxt hook watcher, adding several seconds to every hot-reload cycle.
+- **Native router is superior**: Nuxt 4's built-in file-system router already handles all
+  routing needs, including nested routes, dynamic segments (`[id].vue`), catch-alls, and
+  layouts.
+
+**New convention**: All pages live in `app/pages/` using Nuxt's native file-system router. For
+feature modules, organise pages in a sub-directory:
+
+```text
+app/pages/
+├── index.vue              → /
+├── dashboard/
+│   └── index.vue          → /dashboard
+└── customers/
+    ├── index.vue          → /customers
+    ├── [id].vue           → /customers/:id
+    └── create.vue         → /customers/create
+```
+
+Module components, services, and types can still live under `app/modules/[feature]/` — only
+the `pages/` sub-folder moves into `app/pages/[feature]/`.
+
+HMR on new pages now works instantly with zero restart required.
+
+---
+
 ## Quick Commands
 
 ```bash

@@ -37,13 +37,13 @@ export interface QueryOptions<T> {
   /** Transform API response before storing. */
   transform?: (data: unknown) => T;
   /** Custom cache getter for stale-while-revalidate. */
-  getCachedData?: (key: string, nuxtApp: any) => T | undefined;
+  getCachedData?: (key: string, nuxtApp: ReturnType<typeof useNuxtApp>) => T | undefined;
   /** Deduplication strategy: 'cancel' (default for GET) or 'defer'. */
   dedupe?: 'cancel' | 'defer';
   /** Deep watch (when watch is used). */
   deep?: boolean;
   /** Query parameters. */
-  query?: Record<string, any>;
+  query?: Record<string, unknown>;
   /** Custom headers. */
   headers?: Record<string, string>;
 }
@@ -55,7 +55,7 @@ export interface MutationOptions<T> {
   /** Custom headers. */
   headers?: Record<string, string>;
   /** Query parameters. */
-  query?: Record<string, any>;
+  query?: Record<string, unknown>;
   /** Called when mutation succeeds. */
   onSuccess?: (data: T) => void | Promise<void>;
   /** Called when mutation fails. */
@@ -79,9 +79,9 @@ export interface QueryResult<T> {
  * Result from a mutation operation (POST, PUT, PATCH, DELETE)
  * Includes execute() to trigger the mutation
  */
-export interface MutationResult<T> {
+export interface MutationResult<T, B = unknown> {
   data: Ref<T | null>;
   loading: Ref<boolean>;
   error: Ref<ApiError | null>;
-  execute: (body?: unknown) => Promise<T | null>;
+  execute: (body?: B) => Promise<T | null>;
 }

@@ -1,13 +1,15 @@
 import { useApi } from '~/core/api/useApi';
-
 import type { ExampleItem } from '../types/example.types';
 
+// NOTE: This service uses JSONPlaceholder as a demo external API.
+// In a real module, replace POSTS_ENDPOINT with a path like '/posts'
+// and the apiBase (from runtimeConfig.public.apiBase) will be prepended by client.ts.
 const POSTS_ENDPOINT = 'https://jsonplaceholder.typicode.com/posts';
 
 export const useExampleService = () => {
   const api = useApi();
 
-  const getItems = async () => {
+  const getItems = () => {
     return api.get<ExampleItem[]>(POSTS_ENDPOINT, {
       key: POSTS_ENDPOINT,
       server: true,
@@ -16,7 +18,7 @@ export const useExampleService = () => {
     });
   };
 
-  const getItemById = async (id: number) => {
+  const getItemById = (id: number) => {
     return api.get<ExampleItem>(`${POSTS_ENDPOINT}/${id}`, {
       key: `${POSTS_ENDPOINT}/${id}`,
       server: true,

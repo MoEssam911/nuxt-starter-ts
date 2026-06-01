@@ -6,7 +6,8 @@
     "save": "Save"
   },
   "navigation": {
-    "exampleModule": "Example Module",
+    "exampleModule": "Starter showcase",
+    "docs": "Docs",
     "home": "Home"
   },
   "language": {
@@ -16,5 +17,215 @@
     "dark": "Dark mode",
     "light": "Light mode",
     "toggle": "Toggle theme"
+  },
+  "landing": {
+    "metaTitle": "Nuxt Starter",
+    "hero": {
+      "kicker": "Nuxt 4 starter",
+      "title": "A modern Nuxt starter for global product teams",
+      "description": "A modular Nuxt 4 foundation with TypeScript, Tailwind CSS v4, i18n, auth, a service-first API layer, and a clean docs experience.",
+      "primaryCta": "Read the docs",
+      "secondaryCta": "Explore the showcase",
+      "anchorCta": "Jump to architecture",
+      "note": "Built to stay clean for teams that want to ship real features fast."
+    },
+    "metrics": {
+      "runtime": {
+        "label": "Runtime",
+        "value": "Nuxt 4 + Vue 3"
+      },
+      "stack": {
+        "label": "Stack",
+        "value": "Tailwind CSS v4"
+      },
+      "safety": {
+        "label": "Safety",
+        "value": "Strict TypeScript"
+      },
+      "delivery": {
+        "label": "Delivery",
+        "value": "SSR-safe and modular"
+      }
+    },
+    "featuresTitle": "Everything the starter already gives you",
+    "featuresDescription": "The template is intentionally opinionated around the pieces that matter in production.",
+    "features": {
+      "api": {
+        "eyebrow": "Service layer",
+        "title": "Service-first API access",
+        "description": "All data access flows through useApi() and feature services so components stay thin."
+      },
+      "modules": {
+        "eyebrow": "Architecture",
+        "title": "Domain-driven modules",
+        "description": "Each feature owns its pages, components, services, and types inside a self-contained folder."
+      },
+      "forms": {
+        "eyebrow": "Forms",
+        "title": "Typed validation flows",
+        "description": "Forms use vee-validate and zod so state, rules, and submissions stay explicit."
+      },
+      "theme": {
+        "eyebrow": "Design system",
+        "title": "Theme-aware UI",
+        "description": "Semantic tokens and Tailwind utilities keep light and dark modes aligned."
+      },
+      "i18n": {
+        "eyebrow": "Localization",
+        "title": "Locale-ready content",
+        "description": "Shared and module messages are wired for English and Arabic from the start."
+      },
+      "auth": {
+        "eyebrow": "Access control",
+        "title": "Opt-in page middleware",
+        "description": "Protected pages use page-level middleware instead of hidden global assumptions."
+      },
+      "seo": {
+        "eyebrow": "Metadata",
+        "title": "SEO-ready pages",
+        "description": "Per-page metadata and layout structure make routes easy to optimize."
+      },
+      "testing": {
+        "eyebrow": "Quality",
+        "title": "Testing-friendly structure",
+        "description": "Vitest and the starter conventions make targeted checks straightforward."
+      }
+    },
+    "architectureTitle": "How the codebase is organized",
+    "architectureDescription": "The starter keeps concerns separate so teams can grow the app without reworking the foundation.",
+    "architecture": {
+      "core": {
+        "title": "app/core",
+        "description": "Shared utilities, API client, composables, config, and app-wide helpers."
+      },
+      "modules": {
+        "title": "app/modules",
+        "description": "Feature modules own their feature-specific pages, services, types, and UI."
+      },
+      "pages": {
+        "title": "app/pages",
+        "description": "Public routes compose the presentation layer and direct users into the right feature."
+      },
+      "layouts": {
+        "title": "app/layouts",
+        "description": "Default, auth, and blank shells keep route chrome predictable."
+      }
+    },
+    "stackTitle": "Core stack",
+    "stackDescription": "The starter is tuned for a balanced production baseline rather than a toy demo.",
+    "stack": {
+      "nuxt": "Nuxt 4",
+      "typescript": "Strict TypeScript",
+      "tailwind": "Tailwind CSS v4",
+      "i18n": "Nuxt i18n",
+      "auth": "Page-level auth",
+      "testing": "Vitest",
+      "serviceFirst": {
+        "title": "Service first",
+        "description": "Compose features from services, then keep UI focused on rendering and interaction."
+      },
+      "localeAware": {
+        "title": "Locale aware",
+        "description": "Shared messages and module messages are merged before the app renders, so copy stays consistent."
+      }
+    },
+    "ctaTitle": "Ready to explore the structure in more detail?",
+    "ctaDescription": "Open the showcase route for a deeper tour of the folder structure, patterns, and page-level conventions.",
+    "ctaPrimary": "Open the docs"
+  },
+  "example": {
+    "metaTitle": "Starter showcase",
+    "hero": {
+      "kicker": "Starter showcase",
+      "title": "A practical guide to using the starter in real work",
+      "description": "This route shows how the starter is applied in practice: routes, services, forms, localization, and the page shell conventions that keep the system consistent.",
+      "primaryCta": "Open the docs",
+      "secondaryCta": "Review the structure",
+      "cards": {
+        "routes": {
+          "title": "Public routes",
+          "description": "Home, docs, showcase, dashboard, and auth shells are separated by purpose."
+        },
+        "rules": {
+          "title": "Route rules",
+          "description": "Page-level metadata and RTL-safe utilities keep the starter consistent."
+        }
+      }
+    },
+    "structureTitle": "Project structure",
+    "structureDescription": "The starter is organized around clear ownership boundaries so each layer stays easy to reason about.",
+    "structure": {
+      "core": {
+        "label": "Core",
+        "description": "Shared services, composables, utilities, and configuration live in one place."
+      },
+      "modules": {
+        "label": "Modules",
+        "description": "Feature-specific logic stays isolated in its own module folder."
+      },
+      "pages": {
+        "label": "Pages",
+        "description": "Routes are composed from page files and can be protected per route."
+      },
+      "layouts": {
+        "label": "Layouts",
+        "description": "Route shells stay simple with default, auth, and blank layout modes."
+      }
+    },
+    "principlesTitle": "Implementation principles",
+    "principlesDescription": "The starter favors a narrow set of rules that keep features predictable as the app grows.",
+    "principles": {
+      "serviceFirst": {
+        "title": "Service-first data access",
+        "description": "Components call module services, and services wrap the shared API layer."
+      },
+      "typedData": {
+        "title": "Typed data flows",
+        "description": "API responses, form values, and component props stay typed end to end."
+      },
+      "pageMeta": {
+        "title": "Per-page metadata",
+        "description": "Every page sets its own title and can add route-specific SEO later."
+      },
+      "rtl": {
+        "title": "RTL-friendly styling",
+        "description": "Tailwind start/end utilities keep Arabic layouts aligned automatically."
+      },
+      "i18n": {
+        "title": "Locale-aware UI text",
+        "description": "Shared and module messages are merged into one locale-aware experience."
+      },
+      "theme": {
+        "title": "Semantic theming",
+        "description": "Color tokens and utility classes keep the UI consistent in both themes."
+      }
+    },
+    "usageTitle": "Practical usage",
+    "usageDescription": "Use the starter conventions to ship predictable routes, services, and UI surfaces.",
+    "runtimeTitle": "Runtime behavior",
+    "runtimeDescription": "Shared messages, locale routing, and theme controls stay in the app shell rather than inside feature code.",
+    "routesTitle": "What the public routes show",
+    "routesDescription": "The starter uses the public surface to explain the system before a team starts adding product-specific screens.",
+    "routes": {
+      "home": {
+        "title": "Home",
+        "description": "The landing page presents the starter and points to the deeper showcase."
+      },
+      "showcase": {
+        "title": "Showcase",
+        "description": "A docs-style route that walks through the structure and conventions."
+      },
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "A protected example of how a real product route can use the default layout."
+      },
+      "auth": {
+        "title": "Auth layouts",
+        "description": "Login and registration flows belong in the auth shell, not the public shell."
+      }
+    },
+    "ctaTitle": "Use this as the starting point for production work",
+    "ctaDescription": "Keep the same structure, then swap the showcase copy for your product-specific modules and endpoints.",
+    "ctaPrimary": "Back to home"
   }
 }

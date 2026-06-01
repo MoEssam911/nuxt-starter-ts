@@ -32,15 +32,9 @@ export const useApi = () => {
     const resolveUrl = () => (typeof url === 'function' ? url() : url);
     const key = options?.key ?? resolveUrl();
 
-    // Smart defaults for queries
-    const asyncDataDefaults: any = {
-      server: true,
-      dedupe: 'cancel',
-    };
-
-    // Merge user options with defaults
     const mergedOptions = {
-      ...asyncDataDefaults,
+      server: true,
+      dedupe: 'cancel' as const,
       ...options,
     };
 
